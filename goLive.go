@@ -49,6 +49,11 @@ func (g *GoLive) GET(path string, /*mux *http.ServeMux,*/ handle FunctionHandler
 			Request: r,
 		}
 
+		if r.URL.Path != path {
+			http.Error(w, "Path not found", http.StatusNotFound) // 404
+			return
+		}
+
 		err := handle(ctx)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -67,6 +72,10 @@ func (g *GoLive)POST(path string, /*mux *http.ServeMux,*/ handle FunctionHandler
 		ctx := &Context{
 			Writer: w,
 			Request: r,
+		}
+		if r.URL.Path != path {
+			http.Error(w, "Path not found", http.StatusNotFound) // 404
+			return
 		}
 		err := handle(ctx)
 		if err != nil {
@@ -87,6 +96,10 @@ func (g *GoLive)DELETE(path string, /*mux *http.ServeMux,*/ handle FunctionHandl
 			Writer: w,
 			Request: r,
 		}
+		if r.URL.Path != path {
+			http.Error(w, "Path not found", http.StatusNotFound) // 404
+			return
+		}
 		err := handle(ctx)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -105,6 +118,10 @@ func (g *GoLive)PUT(path string, /*mux *http.ServeMux,*/ handle FunctionHandler)
 		ctx := &Context{
 			Writer: w,
 			Request: r,
+		}
+		if r.URL.Path != path {
+			http.Error(w, "Path not found", http.StatusNotFound) // 404
+			return
 		}
 		err := handle(ctx)
 		if err != nil {
