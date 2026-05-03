@@ -1,6 +1,9 @@
 package goLive
 
-import "net/http"
+import (
+	"net/http"
+	"strings"
+)
 
 type route struct{
 	method string
@@ -10,6 +13,12 @@ type route struct{
 
 type Router struct{
 	routes []route
+	prefixRoutes []prefixroute
+}
+
+type prefixroute struct{
+	prefix string
+	handler http.Handler
 }
 
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
@@ -22,5 +31,21 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 	}
+	// prefix match for static dirs
+	for _, pr := range r.prefixRoutes {
+		if strings.HasPrefix(req.URL.Path, pr.prefix) {
+			pr.handler.ServeHTTP(w, req)
+			return
+		}
+	}
 	http.NotFound(w, req)
+}
+
+func (g *GoLive)ServeDir(urlPath, dirPath string) error {
+	fs := http.FileServer(http.Dir(dirPath))
+	g.router.prefixRoutes = append(g.router.prefixRoutes, prefixroute{
+		prefix: urlPath,
+		handler: http.StripPrefix(urlPath, fs),
+	})
+	return nil
 }

@@ -35,7 +35,7 @@ type FunctionHandler func(c *Context)error //custom handler defined for error ha
 //GoLive dfined struct for starting server and chaining middleware
 type GoLive struct{
 	// Mux *http.ServeMux
-	router *Router
+	router *Router // using custom router for the reqs
 	middlewares []middleware.Middleware
 }
 
@@ -52,118 +52,114 @@ func (g *GoLive) GET(path string, /*mux *http.ServeMux,*/ handle FunctionHandler
 	if path == "/favicon.ico" { //just ignore this will prob redirect in future
   	return
 	}
-	fullGetPath := fmt.Sprintf("GET %s", path)
-  g.Mux.HandleFunc(fullGetPath, func(w http.ResponseWriter, r *http.Request) {
-
-		ctx := &Context{
-			Writer: w,
-			Request: r,
-		}
-
-		if r.URL.Path != path {
-			http.Error(w, "Path not found", http.StatusNotFound) // 404
-			return
-		}
-
-		err := handle(ctx)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-  })
+	g.router.routes = append(g.router.routes, route{
+		method: "GET",
+		pattern: path,
+		handler: handle,
+	})
+	// fullGetPath := fmt.Sprintf("GET %s", path)
+	//  g.Mux.HandleFunc(fullGetPath, func(w http.ResponseWriter, r *http.Request) {
+	//
+	// 	ctx := &Context{
+	// 		Writer: w,
+	// 		Request: r,
+	// 	}
+	//
+	// 	if r.URL.Path != path {
+	// 		http.Error(w, "Path not found", http.StatusNotFound) // 404
+	// 		return
+	// 	}
+	//
+	// 	err := handle(ctx)
+	// 	if err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	//  })
 }
 
 func (g *GoLive)POST(path string, /*mux *http.ServeMux,*/ handle FunctionHandler){ //put request wrapper
 	if path == "/favicon.ico" { //just ignore this will prob redirect in future
   	return
 	}
-	fullPostPath:= fmt.Sprintf("POST %s", path)
-  g.Mux.HandleFunc(fullPostPath, func(w http.ResponseWriter, r *http.Request) {
-
-		ctx := &Context{
-			Writer: w,
-			Request: r,
-		}
-		if r.URL.Path != path {
-			http.Error(w, "Path not found", http.StatusNotFound) // 404
-			return
-		}
-		err := handle(ctx)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-  })
+	g.router.routes = append(g.router.routes, route{
+		method: "POST",
+		pattern: path,
+		handler: handle,
+	})
+	// fullPostPath:= fmt.Sprintf("POST %s", path)
+  // g.Mux.HandleFunc(fullPostPath, func(w http.ResponseWriter, r *http.Request) {
+  //
+  // ctx := &Context{
+  // 	Writer: w,
+  // 	Request: r,
+  // }
+  // if r.URL.Path != path {
+  // 	http.Error(w, "Path not found", http.StatusNotFound) // 404
+  // 	return
+  // }
+  // err := handle(ctx)
+  // if err != nil {
+  // 	http.Error(w, err.Error(), http.StatusInternalServerError)
+  // 	return
+  // }
+  // })
 }
 
 func (g *GoLive)DELETE(path string, /*mux *http.ServeMux,*/ handle FunctionHandler){ //DELETE request wrapper
 	if path == "/favicon.ico" { //just ignore this will prob redirect in future
   	return// may need to add this to the others
 	}
-	fullDeletePath := fmt.Sprintf("DELETE %s", path)
-  g.Mux.HandleFunc(fullDeletePath, func(w http.ResponseWriter, r *http.Request) {
-
-		ctx := &Context{
-			Writer: w,
-			Request: r,
-		}
-		if r.URL.Path != path {
-			http.Error(w, "Path not found", http.StatusNotFound) // 404
-			return
-		}
-		err := handle(ctx)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-  })
+	g.router.routes = append(g.router.routes, route{
+		method: "DELETE",
+		pattern: path,
+		handler: handle,
+	})
+	// fullDeletePath := fmt.Sprintf("DELETE %s", path)
+	//  g.Mux.HandleFunc(fullDeletePath, func(w http.ResponseWriter, r *http.Request) {
+	//
+	// 	ctx := &Context{
+	// 		Writer: w,
+	// 		Request: r,
+	// 	}
+	// 	if r.URL.Path != path {
+	// 		http.Error(w, "Path not found", http.StatusNotFound) // 404
+	// 		return
+	// 	}
+	// 	err := handle(ctx)
+	// 	if err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	//  })
 }
 
 func (g *GoLive)PUT(path string, /*mux *http.ServeMux,*/ handle FunctionHandler){ //PUT request wrapper
 	if path == "/favicon.ico" { //just ignore this will prob redirect in future
   	return// may need to add this to the others
 	}
-	fullPutPath := fmt.Sprintf("PUT %s", path)
-  g.Mux.HandleFunc(fullPutPath, func(w http.ResponseWriter, r *http.Request) {
-
-		ctx := &Context{
-			Writer: w,
-			Request: r,
-		}
-		if r.URL.Path != path {
-			http.Error(w, "Path not found", http.StatusNotFound) // 404
-			return
-		}
-		err := handle(ctx)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-  })
+	g.router.routes = append(g.router.routes, route{
+		method: "PUT",
+		pattern: path,
+		handler: handle,
+	})
 }
 
 //ServeStatic To serve a static file html txt png etc
-func (g *GoLive)ServeStatic(urlPath, filepath string)error{
+func (g *GoLive) ServeStatic(urlPath, filepath string) error {
 	_, err := os.Stat(filepath)
-	if os.IsNotExist(err){
+	if os.IsNotExist(err) {
 		return fmt.Errorf("file does not exist %s", filepath)
 	}
 
-  g.Mux.HandleFunc(urlPath, func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodGet && r.Method != http.MethodHead {
-				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-				return
-		}
-		http.ServeFile(w, r, filepath)
-  })
-	return nil
-}
-
-//ServeDir To serve an entire dir
-func (g *GoLive)ServeDir(urlPath, dirPath string)error{
-	fs := http.FileServer(http.Dir(dirPath))
-	g.Mux.Handle(urlPath, http.StripPrefix(urlPath, fs))
-
+	g.router.routes = append(g.router.routes, route{
+		method:  "GET",
+		pattern: urlPath,
+		handler: func(ctx *Context) error {
+			http.ServeFile(ctx.Writer, ctx.Request, filepath)
+			return nil
+		},
+	})
 	return nil
 }
 
@@ -174,18 +170,6 @@ func (g *GoLive)Chain(mw ...middleware.Middleware){
 }
 
 
-// NOTE: for now this just uses the main routes middleware
-func (g *GoLive)GroupRoutes(prefix string) *GoLive{
-
-	sub := &GoLive{
-		Mux: http.NewServeMux(),
-	}
-
-	g.Mux.Handle(prefix+"/", http.StripPrefix(prefix, sub.Mux))
-
-	return sub
-}
-
 //StartServer starts server with wrapped middleware and takes port ex: 8080
 func (g *GoLive)StartServer(port string){
 
@@ -193,13 +177,15 @@ func (g *GoLive)StartServer(port string){
 
 	server := &http.Server{
 		Addr:    port,
-		Handler: stack(g.Mux), //where g.Mux is added after middleware chaining 
+		Handler: stack(g.router), //where g.Mux is added after middleware chaining 
 		// Handler: middleware.Logger(g.Mux), //where g.Mux is added after middleware chaining 
 		// Handler: middleware.Logging(g.Mux), //this is where the output for Requests are
 	}
 
 	StartingDisaply(port)
-
+	// for _, r := range g.router.routes { // could use for later testing 
+	// 		fmt.Printf("[%s] %s\n", r.method, r.pattern)
+	// }
 	err := server.ListenAndServe()
 	if errors.Is(err, http.ErrServerClosed) {
 			fmt.Println("Server closed")
