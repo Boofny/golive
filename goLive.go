@@ -34,14 +34,17 @@ type FunctionHandler func(c *Context)error //custom handler defined for error ha
 
 //GoLive dfined struct for starting server and chaining middleware
 type GoLive struct{
-	Mux *http.ServeMux
+	// Mux *http.ServeMux
+	router *Router
 	middlewares []middleware.Middleware
 }
 
 //Launch Method for starting the goLive session
-func Launch()*GoLive{ 
+func Test()*GoLive{ 
 	return &GoLive{
-		Mux: http.NewServeMux(),
+		router: &Router{
+			routes: []route{},
+		},
 	}
 }
 
