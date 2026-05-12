@@ -40,7 +40,7 @@ type GoLive struct{
 }
 
 //Launch Method for starting the goLive session
-func Test()*GoLive{ 
+func Launch()*GoLive{ 
 	return &GoLive{
 		router: &Router{
 			routes: []route{},
