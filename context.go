@@ -56,12 +56,9 @@ func (c *Context) ReadForm(data string) ( string ){
 
 //SendSTRING sends a simple text only string to the client good for fast tests json key is "response 
 func (c *Context) SendSTRING(status int, data string)error{
-	resp := map[string]string{
-		"response": data,
-	}
-	c.Writer.Header().Set("Content-Type", "application/json")
+	c.Writer.Header().Set("Content-Type", "text/plain")
 	c.Writer.WriteHeader(status)
-	err := json.NewEncoder(c.Writer).Encode(resp)
+	_, err := c.Writer.Write([]byte(data))
 	return err
 }
 
