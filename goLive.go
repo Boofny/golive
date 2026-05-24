@@ -1,6 +1,7 @@
-// TODO: need to find out how to change all these package names from goLive to golive
+// Package goLive is the interface for accessing golives router methods
 package goLive
 
+// TODO: need to find out how to change all these package names from goLive to golive
 import (
 	"errors"
 	"fmt"

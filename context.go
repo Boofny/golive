@@ -11,8 +11,8 @@ package goLive
 import (
 	"encoding/json"
 	"errors"
-	"os"
 	"net/http"
+	"os"
 )
 
 //Context custom struct to have http types tied to methods rather than passed to functions
@@ -26,6 +26,15 @@ func (c *Context) SendJSON(status int, data any) error {
 	c.Writer.Header().Set("Content-Type", "application/json")
 	c.Writer.WriteHeader(status)
 	return json.NewEncoder(c.Writer).Encode(data)
+}
+
+// PrettyJSON is jut SendJSON with indenting used for sending map/json data
+func (c *Context) PrettyJSON(status int, data any) error {
+	c.Writer.Header().Set("Content-Type", "application/json")
+	c.Writer.WriteHeader(status)
+	encoder := json.NewEncoder(c.Writer)
+	encoder.SetIndent("", " ")
+	return encoder.Encode(data)
 }
 
 // ReadJSON reads json
