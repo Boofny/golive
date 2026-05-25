@@ -116,9 +116,15 @@ func Logger() Middleware{
 			}
 
 			// Output format (your original style)
-			fmt.Print("[ OUTPUT ]:")
-			fmt.Printf("%s >>> %s", color, reset)
-			log.Println(color, wrapped.satusCode, reset, r.Method, "[",r.URL.Path,"]", "|",duration)
+			// fmt.Print("[ OUTPUT ]:")
+			// fmt.Printf("%s >>> %s", color, reset)
+			// log.Println(color, wrapped.satusCode, reset, r.Method, "[",r.URL.Path,"]", "|",duration)
+			log.Printf("[ OUTPUT ]: >>> %s%d%s  %s [ %s ] | %s",
+					color, wrapped.satusCode, reset,
+					r.Method,
+					r.URL.Path,
+					duration,
+			)
 		})
 	}
 }
