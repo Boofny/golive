@@ -40,3 +40,10 @@ curl -X GET localhost:8080/hello
 ```bash
 http://localhost:8080/hello
 ```
+### Check out the docker image 
+[Docker hub](https://hub.docker.com/repository/docker/boofny/golive-docker/general) 
+
+### Or docker one liner for a quick demo
+```bash
+docker run -p 8000:8000 -e PORT=8000 boofny/golive-docker
+```
