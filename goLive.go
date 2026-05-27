@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/Boofny/goLive/middleware"
 )
@@ -49,101 +50,33 @@ func Launch()*GoLive{
 	}
 }
 
-func (g *GoLive) GET(path string, /*mux *http.ServeMux,*/ handle FunctionHandler) { //get request wrapper for simple usage
-	if path == "/favicon.ico" { //just ignore this will prob redirect in future
-  	return
+func (g *GoLive) addRoute(method, path string, handle FunctionHandler) {
+	if path == "/favicon.ico" {
+		return
 	}
+	parts := strings.Split(strings.Trim(path, "/"), "/")
 	g.router.routes = append(g.router.routes, route{
-		method: "GET",
+		method:  method,
 		pattern: path,
+		parts:   parts,
 		handler: handle,
 	})
-	// fullGetPath := fmt.Sprintf("GET %s", path)
-	//  g.Mux.HandleFunc(fullGetPath, func(w http.ResponseWriter, r *http.Request) {
-	//
-	// 	ctx := &Context{
-	// 		Writer: w,
-	// 		Request: r,
-	// 	}
-	//
-	// 	if r.URL.Path != path {
-	// 		http.Error(w, "Path not found", http.StatusNotFound) // 404
-	// 		return
-	// 	}
-	//
-	// 	err := handle(ctx)
-	// 	if err != nil {
-	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 		return
-	// 	}
-	//  })
 }
 
-func (g *GoLive)POST(path string, /*mux *http.ServeMux,*/ handle FunctionHandler){ //put request wrapper
-	if path == "/favicon.ico" { //just ignore this will prob redirect in future
-  	return
-	}
-	g.router.routes = append(g.router.routes, route{
-		method: "POST",
-		pattern: path,
-		handler: handle,
-	})
-	// fullPostPath:= fmt.Sprintf("POST %s", path)
-  // g.Mux.HandleFunc(fullPostPath, func(w http.ResponseWriter, r *http.Request) {
-  //
-  // ctx := &Context{
-  // 	Writer: w,
-  // 	Request: r,
-  // }
-  // if r.URL.Path != path {
-  // 	http.Error(w, "Path not found", http.StatusNotFound) // 404
-  // 	return
-  // }
-  // err := handle(ctx)
-  // if err != nil {
-  // 	http.Error(w, err.Error(), http.StatusInternalServerError)
-  // 	return
-  // }
-  // })
+func (g *GoLive) GET(path string, handle FunctionHandler) {
+	g.addRoute("GET", path, handle)
 }
 
-func (g *GoLive)DELETE(path string, /*mux *http.ServeMux,*/ handle FunctionHandler){ //DELETE request wrapper
-	if path == "/favicon.ico" { //just ignore this will prob redirect in future
-  	return// may need to add this to the others
-	}
-	g.router.routes = append(g.router.routes, route{
-		method: "DELETE",
-		pattern: path,
-		handler: handle,
-	})
-	// fullDeletePath := fmt.Sprintf("DELETE %s", path)
-	//  g.Mux.HandleFunc(fullDeletePath, func(w http.ResponseWriter, r *http.Request) {
-	//
-	// 	ctx := &Context{
-	// 		Writer: w,
-	// 		Request: r,
-	// 	}
-	// 	if r.URL.Path != path {
-	// 		http.Error(w, "Path not found", http.StatusNotFound) // 404
-	// 		return
-	// 	}
-	// 	err := handle(ctx)
-	// 	if err != nil {
-	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 		return
-	// 	}
-	//  })
+func (g *GoLive) POST(path string, handle FunctionHandler) {
+	g.addRoute("POST", path, handle)
 }
 
-func (g *GoLive)PUT(path string, /*mux *http.ServeMux,*/ handle FunctionHandler){ //PUT request wrapper
-	if path == "/favicon.ico" { //just ignore this will prob redirect in future
-  	return// may need to add this to the others
-	}
-	g.router.routes = append(g.router.routes, route{
-		method: "PUT",
-		pattern: path,
-		handler: handle,
-	})
+func (g *GoLive) DELETE(path string, handle FunctionHandler) {
+	g.addRoute("DELETE", path, handle)
+}
+
+func (g *GoLive) PUT(path string, handle FunctionHandler) {
+	g.addRoute("PUT", path, handle)
 }
 
 //ServeStatic To serve a static file html txt png etc

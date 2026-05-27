@@ -19,6 +19,7 @@ import (
 type Context struct{
 	Writer http.ResponseWriter
 	Request *http.Request
+	params map[string]string
 }
 
 // SendJSON used for sending map/json data
@@ -111,9 +112,11 @@ func (c *Context) Redirect(status int, redirectURL string) error {
 }
 
 //Param gets the value of path url param
-func (c *Context)Param(data string)string{
-	foundData := c.Request.PathValue(data)
-	return foundData
+func (c *Context)Param(key string)string{
+	if c.params == nil{
+		return ""
+	}
+	return c.params[key]
 }
 
 //QueryGet gets the Query from the url ?=

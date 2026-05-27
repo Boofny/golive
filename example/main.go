@@ -23,8 +23,8 @@ func main() {
 	})
 
 	//example of a get request with path values
-	e.GET("/user/{id}", func(c *goLive.Context) error {
-		id := c.Param("id")
+	e.GET("/user", func(c *goLive.Context) error {
+		id := c.QueryGet("id")
 		return c.SendSTRING(http.StatusOK, id)
 	})
 	
