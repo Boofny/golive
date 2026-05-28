@@ -19,7 +19,7 @@ func (g *GoLive) GroupRoutes(prefix string) *RouteGroup{
 	}
 }
 
-func (gr *RouteGroup) addRoute(method, path string, handle FunctionHandler) {
+func (gr *RouteGroup) addRoute(method, path string, handle HandleFunc) {
 	if path == "/favicon.ico" {
 		return
 	}
@@ -33,21 +33,26 @@ func (gr *RouteGroup) addRoute(method, path string, handle FunctionHandler) {
 	})
 }
 
-func (gr *RouteGroup) GET(path string, handle FunctionHandler) {
-	gr.addRoute("GET", path, handle)
+func (gr *RouteGroup) GET(path string, handle HandleFunc) {
+	gr.addRoute(GET, path, handle)
 }
 
-func (gr *RouteGroup) POST(path string, handle FunctionHandler) {
-	gr.addRoute("POST", path, handle)
+func (gr *RouteGroup) POST(path string, handle HandleFunc) {
+	gr.addRoute(POST, path, handle)
 }
 
-func (gr *RouteGroup) DELETE(path string, handle FunctionHandler) {
-	gr.addRoute("DELETE", path, handle)
+func (gr *RouteGroup) DELETE(path string, handle HandleFunc) {
+	gr.addRoute(DELETE, path, handle)
 }
 
-func (gr *RouteGroup) PUT(path string, handle FunctionHandler) {
-	gr.addRoute("PUT", path, handle)
+func (gr *RouteGroup) PUT(path string, handle HandleFunc) {
+	gr.addRoute(PUT, path, handle)
 }
+
+func (gr *RouteGroup) OPTIONS(path string, handle HandleFunc) {
+	gr.addRoute(OPTIONS, path, handle)
+}
+
 func (gr *RouteGroup)Chain(mw ...middleware.Middleware){
 	// g.middlewares = append(g.middlewares, middleware.Logger)
 	gr.middlewares = append(gr.middlewares, mw...)

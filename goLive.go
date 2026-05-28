@@ -25,6 +25,9 @@ const (
 	POST = http.MethodPost
 	PUT = http.MethodPut
 	DELETE = http.MethodDelete
+	OPTIONS = http.MethodOptions
+	PATCH = http.MethodPatch
+	HEAD = http.MethodHead
 )
 
 var (
@@ -32,7 +35,7 @@ var (
 	//will add more err code in future as this thing grows
 )
 
-type FunctionHandler func(c *Context)error //custom handler defined for error handling
+type HandleFunc func(c *Context)error //custom handler defined for error handling
 
 //GoLive dfined struct for starting server and chaining middleware
 type GoLive struct{
@@ -50,7 +53,7 @@ func Launch()*GoLive{
 	}
 }
 
-func (g *GoLive) addRoute(method, path string, handle FunctionHandler) {
+func (g *GoLive) addRoute(method, path string, handle HandleFunc) {
 	if path == "/favicon.ico" {
 		return
 	}
@@ -63,20 +66,24 @@ func (g *GoLive) addRoute(method, path string, handle FunctionHandler) {
 	})
 }
 
-func (g *GoLive) GET(path string, handle FunctionHandler) {
-	g.addRoute("GET", path, handle)
+func (g *GoLive) GET(path string, handle HandleFunc) {
+	g.addRoute(GET, path, handle)
 }
 
-func (g *GoLive) POST(path string, handle FunctionHandler) {
-	g.addRoute("POST", path, handle)
+func (g *GoLive) POST(path string, handle HandleFunc) {
+	g.addRoute(POST, path, handle)
 }
 
-func (g *GoLive) DELETE(path string, handle FunctionHandler) {
-	g.addRoute("DELETE", path, handle)
+func (g *GoLive) DELETE(path string, handle HandleFunc) {
+	g.addRoute(DELETE, path, handle)
 }
 
-func (g *GoLive) PUT(path string, handle FunctionHandler) {
-	g.addRoute("PUT", path, handle)
+func (g *GoLive) PUT(path string, handle HandleFunc) {
+	g.addRoute(PUT, path, handle)
+}
+
+func (g *GoLive) OPTIONS(path string, handle HandleFunc) {
+	g.addRoute(OPTIONS, path, handle)
 }
 
 //ServeStatic To serve a static file html txt png etc

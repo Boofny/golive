@@ -9,7 +9,7 @@ type route struct{
 	method string
 	pattern string 
 	parts []string
-	handler FunctionHandler
+	handler HandleFunc 
 }
 
 type Router struct{

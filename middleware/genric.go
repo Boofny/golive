@@ -27,19 +27,10 @@ import (
 // 	})
 // }
 
-// func CORS2 () Middleware{
-// 	return func (next http.Handler) http.Handler {
-// 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 			w.Header().Set("Access-Control-Allow-Origin", "*")//will need this bro bro
-// 			log.Println("Enabling CORS")
-// 			next.ServeHTTP(w, r)
-// 		})
-// 	}
-// }
 
 // type Middleware func(http.Handler) http.Handler //just to remind what middleware defines
 
-//CORS set to all origins * use only for testing
+//CORS set to all origins * use only for testing not prod
 func CORS() Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -57,10 +48,6 @@ func CORS() Middleware {
 		})
 	}
 }
-
-//TODO: need to add an option for multi origin
-//should prob be an array aka slice that contains multiple origins 
-//can remake this function but with this in mind
 
 	// e.Use(middleware.Recover())
 	//
