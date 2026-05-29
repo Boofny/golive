@@ -5,7 +5,10 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/Boofny/golive"
 )
+
 type wrappedWrite struct{
 	http.ResponseWriter
 	satusCode int
@@ -30,55 +33,9 @@ func (w *wrappedWrite) Write(b []byte) (int, error) {
 
 //NOTE: commenting this out in order to test something if want to go back to optional logger uncommnt this and see the golive file
 
-// func Logger() Middleware{
-// 	return func (next http.Handler)http.Handler  { //og name is Logging() new name Logger()
-// 		redH:= "\033[31m"
-// 		greenH := "\033[32m"
-// 		reset := "\033[0m"
-// 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
-// 			start := time.Now()
-//
-// 			wrapped := &wrappedWrite{
-// 				ResponseWriter: w,
-// 				satusCode: http.StatusOK,
-// 			}
-// 			next.ServeHTTP(wrapped, r)
-// 			code := wrapped.satusCode
-// 			if code >= 400 && code <= 599{ 
-// 				fmt.Print("\033[31m >>> \033[0m") //error
-// 				log.Println(redH, wrapped.satusCode, reset, r.Method , r.URL.Path, time.Since(start))
-// 			}else{
-// 				fmt.Print("\033[32m >>> \033[0m") //good
-// 				log.Println(greenH, wrapped.satusCode, reset, r.Method , r.URL.Path, time.Since(start)) 
-// 			}
-// 		})
-// 	}
-// }
 
-// func Logger(next http.Handler)http.Handler  { //og name is Logging() new name Logger()
-// 	redH:= "\033[31m"
-// 	greenH := "\033[32m"
-// 	reset := "\033[0m"
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
-// 		start := time.Now()
-//
-// 		wrapped := &wrappedWrite{
-// 			ResponseWriter: w,
-// 			satusCode: http.StatusOK,
-// 		}
-// 		next.ServeHTTP(wrapped, r)
-// 		code := wrapped.satusCode
-// 		if code >= 400 && code <= 599{ 
-// 			fmt.Print("\033[31m >>> \033[0m") //error
-// 			log.Println(redH, wrapped.satusCode, reset, r.Method , r.URL.Path, time.Since(start))
-// 		}else{
-// 			fmt.Print("\033[32m >>> \033[0m") //good
-// 			log.Println(greenH, wrapped.satusCode, reset, r.Method , r.URL.Path, time.Since(start)) 
-// 		}
-// 	})
-// }
-
-func Logger() Middleware{
+// Logger is the standard logger to get http methods, status and routes
+func Logger() golive.Middleware{
 	return func (next http.Handler) http.Handler {
 		// Color codes
 		red := "\033[31m"
@@ -120,10 +77,10 @@ func Logger() Middleware{
 			// fmt.Printf("%s >>> %s", color, reset)
 			// log.Println(color, wrapped.satusCode, reset, r.Method, "[",r.URL.Path,"]", "|",duration)
 			log.Printf("[ OUTPUT ]: >>> %s%d%s  %s [ %s ] | %s",
-					color, wrapped.satusCode, reset,
-					r.Method,
-					r.URL.Path,
-					duration,
+				color, wrapped.satusCode, reset,
+				r.Method,
+				r.URL.Path,
+				duration,
 			)
 		})
 	}

@@ -1,4 +1,4 @@
-package goLive
+package golive
 
 import (
 	"net/http"

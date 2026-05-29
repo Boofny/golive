@@ -1,3 +1,3 @@
-module github.com/Boofny/goLive
+module github.com/Boofny/golive
 
 go 1.25.1

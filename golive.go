@@ -1,5 +1,5 @@
-// Package goLive is the interface for accessing golives router methods
-package goLive
+// Package golive is the interface for accessing golives router methods
+package golive
 
 // TODO: need to find out how to change all these package names from goLive to golive
 import (
@@ -9,16 +9,17 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Boofny/goLive/middleware"
+	// "github.com/Boofny/golive/middleware"
 )
-	const banner =  `
+
+const banner =  `
  ██████╗  ██████╗ ██╗     ██╗██╗   ██╗███████╗██╗
 ██╔════╝ ██╔═══██╗██║     ██║██║   ██║██╔════╝██║
 ██║  ███╗██║   ██║██║     ██║██║   ██║█████╗  ██║
 ██║   ██║██║   ██║██║     ██║╚██╗ ██╔╝██╔══╝  ╚═╝
 ╚██████╔╝╚██████╔╝███████╗██║ ╚████╔╝ ███████╗██╗
  ╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═══╝  ╚══════╝╚═╝
-	`    
+`    
 
 const (
 	GET = http.MethodGet
@@ -41,7 +42,7 @@ type HandleFunc func(c *Context)error //custom handler defined for error handlin
 type GoLive struct{
 	// Mux *http.ServeMux
 	router *Router // using custom router for the reqs
-	middlewares []middleware.Middleware
+	middlewares []Middleware
 }
 
 //Launch Method for starting the goLive session
@@ -105,7 +106,7 @@ func (g *GoLive) ServeStatic(urlPath, filepath string) error {
 }
 
 //Chain use passes a variadic value of Middleware that is appended to the g.middlewares slice
-func (g *GoLive)Chain(mw ...middleware.Middleware){
+func (g *GoLive)Chain(mw ...Middleware){
 	// g.middlewares = append(g.middlewares, middleware.Logger)
 	g.middlewares = append(g.middlewares, mw...)
 }
@@ -114,7 +115,7 @@ func (g *GoLive)Chain(mw ...middleware.Middleware){
 //StartServer starts server with wrapped middleware and takes port ex: 8080
 func (g *GoLive)StartServer(port string){
 
-	stack := middleware.CreateStack(g.middlewares...)
+	stack := createStack(g.middlewares...)
 
 	server := &http.Server{
 		Addr:    port,
@@ -141,7 +142,7 @@ func StartingDisaply(port string){
 	blue := "\033[34m"
 	yellow := "\033[33m"
 	reset := "\033[30m"
-	fmt.Println(blue, banner)
+	fmt.Print(blue, banner)
 	fmt.Print("\033[34m >>> \033[0m")
 	fmt.Print("Server started successfully on port " +  yellow + port + reset)
 	fmt.Println("\033[34m <<< \033[0m")

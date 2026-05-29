@@ -1,15 +1,15 @@
-package goLive
+package golive
 
 import (
 	"strings"
 
-	"github.com/Boofny/goLive/middleware"
+	// "github.com/Boofny/golive/middleware"
 )
 
 type RouteGroup struct {
 	prefix string
 	router *Router
-	middlewares []middleware.Middleware
+	middlewares []Middleware
 }
 
 func (g *GoLive) GroupRoutes(prefix string) *RouteGroup{
@@ -53,7 +53,8 @@ func (gr *RouteGroup) OPTIONS(path string, handle HandleFunc) {
 	gr.addRoute(OPTIONS, path, handle)
 }
 
-func (gr *RouteGroup)Chain(mw ...middleware.Middleware){
+// Chain for just groups
+func (gr *RouteGroup)Chain(mw ...Middleware){
 	// g.middlewares = append(g.middlewares, middleware.Logger)
 	gr.middlewares = append(gr.middlewares, mw...)
 }

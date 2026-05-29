@@ -5,7 +5,7 @@
 ### Get started by downloading this module
 #### Need Golang 1.25.1+
 ```bash
-go get github.com/Boofny/goLive@latest
+go get github.com/Boofny/golive@latest
 ```
 
 ### Simple Example
@@ -14,16 +14,16 @@ package main
 
 import (
 	"net/http"
-	"github.com/Boofny/goLive"
-	"github.com/Boofny/goLive/middleware"
+	"github.com/Boofny/golive"
+	"github.com/Boofny/golive/middleware"
 )
 
 func main() {
-	e := goLive.Launch()
+	e := golive.Launch()
 
 	e.Chain(middleware.CORS())
 
-	e.GET("/ping", func(c *goLive.Context)error{
+	e.GET("/ping", func(c *golive.Context)error{
 		return c.SendSTRING(http.StatusOK, "pong") //send out your data
 	})
 

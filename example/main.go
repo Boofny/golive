@@ -3,12 +3,12 @@ package main
 import (
 	"net/http"
 
-	"github.com/Boofny/goLive"
-	"github.com/Boofny/goLive/middleware"
+	"github.com/Boofny/golive"
+	"github.com/Boofny/golive/middleware"
 )
 
 func main() {
-	e := goLive.Launch()
+	e := golive.Launch()
 
 	e.Chain(
 		middleware.CORS(),
@@ -16,20 +16,20 @@ func main() {
 	)
 
 	// Example get req
-	e.GET("/ping", func(c *goLive.Context) error {
+	e.GET("/ping", func(c *golive.Context) error {
 		return c.SendJSON(http.StatusOK, map[string]string{
 			"message": "pong",
 		})
 	})
 
 	//example of a get request with path values
-	e.GET("/user", func(c *goLive.Context) error {
+	e.GET("/user", func(c *golive.Context) error {
 		id := c.QueryGet("id")
 		return c.SendSTRING(http.StatusOK, id)
 	})
 	
 	//example of reading json from post request
-	e.POST("/posting", func(c *goLive.Context) error {
+	e.POST("/posting", func(c *golive.Context) error {
 
 		type User struct{ 
 			Name string `json:"name"`
@@ -51,7 +51,7 @@ func main() {
 
 	v1 := e.GroupRoutes("/v1")
 
-	v1.GET("/ping", func(c *goLive.Context) error {
+	v1.GET("/ping", func(c *golive.Context) error {
 		return c.SendSTRING(http.StatusOK, "pong v1")
 	})
 

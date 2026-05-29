@@ -6,7 +6,7 @@ most of these ,methods will need a http status code 200 404 etc...
 
 // TODO: make error and valid send json make the key for the map the param
 
-package goLive
+package golive
 
 import (
 	"encoding/json"
