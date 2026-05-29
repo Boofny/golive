@@ -1,6 +1,25 @@
 //Package middleware is the interface for middleware methods 
 package middleware
 
+// TODO: need to add a recovory middlware for panics
+// something allong the lines of this 
+/*
+func Recover() golive.Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			defer func() {
+				if err := recover(); err != nil{
+					print("\033[31mServer panic recovered - \033[0m")
+					w.Header().Set("Content-Type", "application/json")
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(`{"error":"Internal server error"}`))
+				}
+			}()
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+*/
 import (
 	"net/http"
 	"strings"
