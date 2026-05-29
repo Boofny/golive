@@ -2,6 +2,7 @@
 package middleware
 
 // TODO: need to add a recovory middlware for panics
+// TODO: also need to try adding my own Handler for the middleware insted of respnce and req
 // something allong the lines of this 
 /*
 func Recover() golive.Middleware {
