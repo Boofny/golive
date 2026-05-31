@@ -1,47 +1,28 @@
 //Package middleware is the interface for middleware methods 
 package middleware
 
-// TODO: need to add a recovory middlware for panics
 // TODO: also need to try adding my own Handler for the middleware insted of respnce and req
-// something allong the lines of this 
-/*
-func Recover() golive.Middleware {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			defer func() {
-				if err := recover(); err != nil{
-					print("\033[31mServer panic recovered - \033[0m")
-					w.Header().Set("Content-Type", "application/json")
-					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte(`{"error":"Internal server error"}`))
-				}
-			}()
-			next.ServeHTTP(w, r)
-		})
-	}
-}
-*/
 import (
 	"net/http"
 	"strings"
-
 	"github.com/Boofny/golive"
 )
 
+// NOTE: type Middleware func(http.Handler) http.Handler 
 
 //CORS set to all origins * use only for testing not prod
 func CORS() golive.Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-      w.Header().Set("Access-Control-Allow-Credentials", "true")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH")
+			w.Header().Set("Access-Control-Allow-Headers", "Accept, Authorization, Content-Type, X-CSRF-Token")
+			w.Header().Set("Access-Control-Allow-Credentials", "false") // Set to "true" if credentials are required
 
-  		if r.Method == http.MethodOptions {
+	 		if r.Method == http.MethodOptions {
 				w.WriteHeader(http.StatusOK)
 				return // stop here, don’t call next
-      }
+	    }
 
 			next.ServeHTTP(w, r)
 		})
@@ -67,7 +48,6 @@ func CustomCORS(allowedOrigins... string) golive.Middleware {
         w.Header().Set("Vary", "Origin")
         w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 				w.Header().Set("Access-Control-Allow-Headers", "Accept, X-CSRF-Token, Content-Type, Authorization")
-        // w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
         w.Header().Set("Access-Control-Allow-Credentials", "true")
 			}
 
@@ -80,3 +60,30 @@ func CustomCORS(allowedOrigins... string) golive.Middleware {
 		})
 	}
 }
+
+// Recover is just a simple handler for the 500 error code
+func Recover() golive.Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			defer func() {
+				if err := recover(); err != nil{
+					print("\033[31mServer panic recovered - \033[0m")
+					w.Header().Set("Content-Type", "application/json")
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(`{"error":"Internal server error"}`))
+				}
+			}()
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+// TODO: 
+// Rate limiting 
+// Authentication - simple version
+// Request ID 
+// Timeout 
+// Body size limit 
+// Gzip compression
+
+

@@ -1,15 +1,12 @@
 // Package golive is the interface for accessing golives router methods
 package golive
 
-// TODO: need to find out how to change all these package names from goLive to golive
 import (
 	"errors"
 	"fmt"
 	"net/http"
 	"os"
 	"strings"
-
-	// "github.com/Boofny/golive/middleware"
 )
 
 const banner =  `
