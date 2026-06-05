@@ -84,6 +84,14 @@ func (g *GoLive) OPTIONS(path string, handle HandleFunc) {
 	g.addRoute(OPTIONS, path, handle)
 }
 
+func (g *GoLive) PATCH(path string, handle HandleFunc) {
+	g.addRoute(PATCH, path, handle)
+}
+
+func (g *GoLive) HEAD(path string, handle HandleFunc) {
+	g.addRoute(HEAD, path, handle)
+}
+
 //ServeStatic To serve a static file html txt png etc
 func (g *GoLive) ServeStatic(urlPath, filepath string) error {
 	_, err := os.Stat(filepath)
