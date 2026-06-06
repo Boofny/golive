@@ -12,6 +12,13 @@ type RouteGroup struct {
 	middlewares []Middleware
 }
 
+// Chain for just groups
+func (gr *RouteGroup)Chain(mw ...Middleware){
+	// g.middlewares = append(g.middlewares, middleware.Logger)
+	gr.middlewares = append(gr.middlewares, mw...)
+}
+
+// TODO: some how need to add the groups to have there own middlware stack without using the g.router or chain
 func (g *GoLive) GroupRoutes(prefix string) *RouteGroup{
 	return &RouteGroup{
 		prefix: prefix,
@@ -53,8 +60,3 @@ func (gr *RouteGroup) OPTIONS(path string, handle HandleFunc) {
 	gr.addRoute(OPTIONS, path, handle)
 }
 
-// Chain for just groups
-func (gr *RouteGroup)Chain(mw ...Middleware){
-	// g.middlewares = append(g.middlewares, middleware.Logger)
-	gr.middlewares = append(gr.middlewares, mw...)
-}
