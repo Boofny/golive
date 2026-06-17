@@ -7,6 +7,10 @@ import (
 	"github.com/Boofny/golive/middleware"
 )
 
+type Req struct{
+	Files []string `json:"files"`
+}
+
 func main() {
 	e := golive.Launch()
 
@@ -19,6 +23,17 @@ func main() {
 	e.GET("/ping", func(c *golive.Context) error {
 		return c.SendJSON(http.StatusOK, map[string]string{
 			"message": "pong",
+		})
+	})
+
+	e.POST("/upload", func(c *golive.Context) error {
+		var req Req
+		err := c.ReadJSON(&req)
+		if err != nil {
+			return c.Error(404, "Non valid json")
+		}
+		return c.PrettyJSON(200, map[string][]string{
+			"Files given": req.Files,
 		})
 	})
 

@@ -10,12 +10,12 @@ type User struct{
 }
 
 const (
-	userJson = `{"id": 1, "name": "David"}`
-	usersJson = `[{"id": 1, "name": "David"}]`
+	userJSON  = `{"id": 1, "name": "David"}`
+	usersJSON = `[{"id": 1, "name": "David"}]`
 )
 
 const (
-	PretyJson = `
+	PretyJSON = `
 	{
 		"id": 1,
 		"name": "David"
